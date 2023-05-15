@@ -1,0 +1,6 @@
+*.iso
+isodir
+sysroot
+.vscode
+preset
+qemu.sh
