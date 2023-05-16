@@ -8,6 +8,7 @@ bool surrv;
 bool cff;
 bool pars;
 int actu;
+int cas;//ctrl alt shift
 
 
 void outb(uint16_t port, uint8_t val)
@@ -107,10 +108,15 @@ void liclavier(int m, int* de, char* clav, bool pars) //on va autoriser l'ecritu
 {
 	if (m<59 && de[m]==0) {
 		switch (m)
-		{
 		case 4:
+		if (cas==0){
 			terminal_putchar('"');
 			currentlign[actu]='"';
+			}
+		else { 
+			terminal_putchar('3');
+			currentlign[actu]='3';
+			}
 			actu+=1;
 			break;
 		case 14:
@@ -131,25 +137,39 @@ void liclavier(int m, int* de, char* clav, bool pars) //on va autoriser l'ecritu
 			if (pars) {parse(currentlign);}
 			clean();
 			break;
+		case 42:
+			cas=(cas/10)*10+1;
+			break;
+		case 54:
+			cas=(cas/10)*10+1;
+			break;
 		default:
-			char c=clav[m]; 
-			terminal_putchar(c);
-			currentlign[actu]=c;
+			if (cas==0){
+				char c=clav[m]; 
+				terminal_putchar(c);
+				currentlign[actu]=c;}
+			else {
+				char c=clav[m+58]; 
+				terminal_putchar(c);
+				currentlign[actu]=c;
+			}
 			actu+=1;
 			break;
 		}
 		de[m]=1;
 	}
 	else {
-		if (m>129 && de[m-128]==1){de[m-128]=0;}
+		if (m>129 && de[m-128]==1){
+			if (m==170 || m==182){cas=(cas/10)*10;}
+			de[m-128]=0;}
 	}
-	
 }
 
 
 void kernel_main(void) {
 	terminal_initialize();
 	clean();
+	cas=0;
 	pars=true;
 	cff=false;
 	surrv=false;
