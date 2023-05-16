@@ -63,7 +63,6 @@ void terminal_delete(void)
 		terminal_column+= -1;
 		const size_t index = terminal_row * VGA_WIDTH + terminal_column;
 		terminal_buffer[index] = vga_entry(' ', terminal_color);
-		//currentlign[terminal_column]=' ';
 		
 	}
 	/* pour edit de texte et que le del remonte des ligne else
