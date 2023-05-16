@@ -63,7 +63,7 @@ void bug(void)
 {
 	int j=6;
 	int z=j/0;
-	terminal_writestring(z);
+	terminal_writestring((char*) z);
 }
 
 void ff(void)
@@ -75,10 +75,10 @@ void ff(void)
 void help(void)
 {
 	pars=false;
-	terminal_writestring("switch side - change side color \n");
-	terminal_writestring("glitch - a glitch causing rift to reset \n");
-	terminal_writestring("ff - start a surrender vote \n");
-	terminal_writestring("help - print this \n");
+	terminal_writestring("switch side - Change side color \n");
+	terminal_writestring("glitch - A glitch causing rift to reset \n");
+	terminal_writestring("ff - Start a surrender vote \n");
+	terminal_writestring("help - Print this \n");
 	pars=true;
 }
 
@@ -86,19 +86,19 @@ void parse(char* l)
 {	
 	if (!surrv){
 		if (match(l,"switch side",11)) {switch_side();}
-		else{if (match(l,"glitch",6)){bug();}
-		else{if (match(l,"help",4)){help();}
-		else{if (match(l,"ff",2)){ff();}
-		else{if (match(l,"  ",2)){terminal_writestring("pas normal");}
-		else{
+		else if (match(l,"glitch",6)) bug();
+		else if (match(l,"help",4)) help();
+		else if (match(l,"ff",2)) ff();
+		else if (match(l,"  ",2)) return;
+		else {
 			pars=false;
-			terminal_writestring("unknown spell, try again \n");
+			terminal_writestring("Unknown spell, try again \n");
 			pars=true;
-		}}}}}
+		}
 	}
 	else {
-		if (match(l,"y",1)){terminal_writestring("you surrendered"); cff=true;}
-		else{pars=false; terminal_writestring("you refuse to surrender \n"); pars=true; surrv=false;}
+		if (match(l,"y",1)){terminal_writestring("You surrendered"); cff=true;}
+		else{pars=false; terminal_writestring("You refuse to surrender \n"); pars=true; surrv=false;}
 	}
 }
 
@@ -157,6 +157,7 @@ void kernel_main(void) {
 	uint8_t inter;
 	int m;
 	char* clav= get_clavier();
+	printf("Welcome to the rift!\n");
 	while ( !cff ) {
 			inter=inb(0x060);
 			m=inter;
