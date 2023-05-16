@@ -3,6 +3,7 @@
 #include <stdint.h>
 #include <kernel/tty.h>
 
+
 char* currentlign;
 bool surrv;
 bool cff;
@@ -60,46 +61,54 @@ void switch_side(void)
 	else {terminal_setcolor(get_entry_color(11, 0));}
 }
 
-void bug(void)
+void glitch(void)
 {
 	int j=6;
 	int z=j/0;
-	terminal_writestring((char*) z);
+	printf((char*) z);
 }
 
 void ff(void)
 {
 	surrv=true;
-	terminal_writestring("surrender vote : [y/n]?");
+	printf("surrender vote : [y/n]?\n");
+	write_input_prefix();
 }
 
 void help(void)
 {
 	pars=false;
-	terminal_writestring("switch side - Change side color \n");
-	terminal_writestring("glitch - A glitch causing rift to reset \n");
-	terminal_writestring("ff - Start a surrender vote \n");
-	terminal_writestring("help - Print this \n");
+	printf("switch side - Change side color \n");
+	printf("glitch - A glitch causing rift to reset \n");
+	printf("ff - Start a surrender vote \n");
+	printf("help - Print this \n");
+	write_input_prefix();
 	pars=true;
+}
+
+void write_input_prefix(void) {
+	// à développer qd on aura un file system
+	printf("> ");
 }
 
 void parse(char* l)
 {	
 	if (!surrv){
 		if (match(l,"switch side",11)) {switch_side();}
-		else if (match(l,"glitch",6)) bug();
+		else if (match(l,"glitch",6)) glitch();
 		else if (match(l,"help",4)) help();
 		else if (match(l,"ff",2)) ff();
-		else if (match(l,"  ",2)) return;
+		else if (match(l,"  ",2)) write_input_prefix();
 		else {
 			pars=false;
-			terminal_writestring("Unknown spell, try again \n");
+			printf("Unknown spell, try again \n");
+			write_input_prefix();
 			pars=true;
 		}
 	}
 	else {
-		if (match(l,"y",1)){terminal_writestring("You surrendered"); cff=true;}
-		else{pars=false; terminal_writestring("You refuse to surrender \n"); pars=true; surrv=false;}
+		if (match(l,"y",1)){printf("You surrendered"); cff=true;}
+		else{pars=false; printf("You refuse to surrender \n"); write_input_prefix(); pars=true; surrv=false;}
 	}
 }
 
@@ -107,18 +116,18 @@ void parse(char* l)
 void liclavier(int m, int* de, char* clav, bool pars) //on va autoriser l'ecriture seulement si la touche à été relevée
 {
 	if (m<59 && de[m]==0) {
-		switch (m)
+		switch (m) {
 		case 4:
-		if (cas==0){
-			terminal_putchar('"');
-			currentlign[actu]='"';
-			}
-		else { 
-			terminal_putchar('3');
-			currentlign[actu]='3';
-			}
-			actu+=1;
-			break;
+			if (cas==0){
+				terminal_putchar('"');
+				currentlign[actu]='"';
+				}
+			else { 
+				terminal_putchar('3');
+				currentlign[actu]='3';
+				}
+				actu+=1;
+				break;
 		case 14:
 			if (actu>0){
 			terminal_delete();
@@ -126,7 +135,7 @@ void liclavier(int m, int* de, char* clav, bool pars) //on va autoriser l'ecritu
 			currentlign[actu]=' ';}
 			break;
 		case 15:
-			terminal_writestring("   ");
+			printf("   ");
 			currentlign[actu]=' ';
 			currentlign[actu++]=' ';
 			currentlign[actu++]=' ';
@@ -165,7 +174,6 @@ void liclavier(int m, int* de, char* clav, bool pars) //on va autoriser l'ecritu
 	}
 }
 
-
 void kernel_main(void) {
 	terminal_initialize();
 	clean();
@@ -178,6 +186,7 @@ void kernel_main(void) {
 	int m;
 	char* clav= get_clavier();
 	printf("Welcome to the rift!\n");
+	write_input_prefix()
 	while ( !cff ) {
 			inter=inb(0x060);
 			m=inter;
