@@ -10,7 +10,8 @@ bool cff;
 bool pars;
 int actu;
 int cas;//ctrl alt shift
-
+int loldlencours;
+int rand;
 
 void outb(uint16_t port, uint8_t val)
 {
@@ -53,12 +54,18 @@ bool match(char* li, char* fc, size_t fclength)
 	return (bonmatch);
 }
 
+void write_input_prefix(void) {
+	// à développer qd on aura un file system
+	printf("> ");
+}
+
 void switch_side(void)
 {
 	if (get_terminal_color() == get_entry_color(11, 0)){
 		terminal_setcolor(get_entry_color(12, 0));
 	}
 	else {terminal_setcolor(get_entry_color(11, 0));}
+	write_input_prefix();
 }
 
 void glitch(void)
@@ -71,8 +78,7 @@ void glitch(void)
 void ff(void)
 {
 	surrv=true;
-	printf("surrender vote : [y/n]?\n");
-	write_input_prefix();
+	printf("surrender vote : [y/n]? ");
 }
 
 void help(void)
@@ -81,15 +87,35 @@ void help(void)
 	printf("switch side - Change side color \n");
 	printf("glitch - A glitch causing rift to reset \n");
 	printf("ff - Start a surrender vote \n");
+	printf("loldle - Play loldle a game where you must fine a champion by guessing its name and matching attributes\n");
 	printf("help - Print this \n");
 	write_input_prefix();
 	pars=true;
 }
 
-void write_input_prefix(void) {
-	// à développer qd on aura un file system
-	printf("> ");
+void loldle(char* guess){
+	bool pastrouv=true;
+	for (int i=0; i<161; i++){ //a dichotomiser pour opti
+		if (match(guess,get_perso(i,0),strlen(get_perso(i,0))))
+		{
+			pastrouv=false;
+			uint8_t col=get_terminal_color();
+			for (int j=1; j<8;j++){
+				if (get_perso(i,j)==get_perso(loldlencours,j)){
+					terminal_setcolor(get_entry_color(10,0));
+				}
+				else {terminal_setcolor(get_entry_color(4,0));}
+				printf(get_perso(i,j));
+				printf(" ");
+			}
+			terminal_setcolor(col);
+			printf("\n");
+			if (i==loldlencours){printf("Congrats \n");loldlencours=161;pars=true;write_input_prefix();}
+		}
+	}
+	if (pastrouv){printf("Unknown champion, try again \n");}
 }
+
 
 void parse(char* l)
 {	
@@ -99,6 +125,7 @@ void parse(char* l)
 		else if (match(l,"help",4)) help();
 		else if (match(l,"ff",2)) ff();
 		else if (match(l,"  ",2)) write_input_prefix();
+		else if (match(l,"loldle",6)) {loldlencours=rand; pars=false;}
 		else {
 			pars=false;
 			printf("Unknown spell, try again \n");
@@ -172,12 +199,15 @@ void liclavier(int m, int* de, char* clav, bool pars) //on va autoriser l'ecritu
 			if (m==170 || m==182){cas=(cas/10)*10;}
 			de[m-128]=0;}
 	}
+	rand=(rand+1)%161;
 }
 
 void kernel_main(void) {
 	terminal_initialize();
 	clean();
 	cas=0;
+	rand=0;
+	loldlencours=161;
 	pars=true;
 	cff=false;
 	surrv=false;
