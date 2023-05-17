@@ -87,7 +87,7 @@ void help(void)
 	printf("switch side - Change side color \n");
 	printf("glitch - A glitch causing rift to reset \n");
 	printf("ff - Start a surrender vote \n");
-	printf("loldle - Play loldle a game where you must fine a champion by guessing its name and matching attributes\n");
+	printf("loldle - Play loldle a game where you must find a random champ\n");
 	printf("help - Print this \n");
 	write_input_prefix();
 	pars=true;
