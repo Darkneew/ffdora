@@ -14,6 +14,7 @@ void terminal_write(const char* data, size_t size);
 void terminal_writestring(const char* data);
 bool get_cff(void);
 char* get_clavier(void);
+char* get_perso(int rand,int stat);
 size_t get_terminal_row(void);
 void set_terminal_row(size_t r);
 void set_terminal_column(size_t r);
