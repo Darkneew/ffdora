@@ -111,9 +111,10 @@ void loldle(char* guess){
 			terminal_setcolor(col);
 			printf("\n");
 			if (i==loldlencours){printf("Congrats \n");loldlencours=161;pars=true;write_input_prefix();}
+			else {printf("Enter a champion's name : ");}
 		}
 	}
-	if (pastrouv){printf("Unknown champion, try again \n");}
+	if (pastrouv){printf("Unknown champion, try again \n");printf("Enter a champion's name : ");}
 }
 
 
@@ -171,6 +172,7 @@ void liclavier(int m, int* de, char* clav, bool pars) //on va autoriser l'ecritu
 		case 28:
 			terminal_putchar('\n');
 			if (pars) {parse(currentlign);}
+			else if (loldlencours!=161) {loldle(currentlign);}
 			clean();
 			break;
 		case 42:
