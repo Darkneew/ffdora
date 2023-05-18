@@ -126,7 +126,7 @@ void parse(char* l)
 		else if (match(l,"help",4)) help();
 		else if (match(l,"ff",2)) ff();
 		else if (match(l,"  ",2)) write_input_prefix();
-		else if (match(l,"loldle",6)) {loldlencours=rand; pars=false;}
+		else if (match(l,"loldle",6)) {loldlencours=rand; pars=false; printf("Enter a champion's name : ");}
 		else {
 			pars=false;
 			printf("Unknown spell, try again \n");
