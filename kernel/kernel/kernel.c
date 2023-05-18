@@ -1,7 +1,10 @@
 #include <stdio.h>
 #include <stdbool.h>
+#include <string.h>
 #include <stdint.h>
 #include <kernel/tty.h>
+#include <kernel/architecture.h>
+#include <kernel/io.h>
 
 
 char* currentlign;
@@ -13,28 +16,9 @@ int cas;//ctrl alt shift
 int loldlencours;
 int rand;
 
-void outb(uint16_t port, uint8_t val)
-{
-    asm volatile ( "outb %0, %1" : : "a"(val), "Nd"(port) );
-    /* There's an outb %al, $imm8  encoding, for compile-time constant port numbers that fit in 8b.  (N constraint).
-     * Wider immediate constants would be truncated at assemble-time (e.g. "i" constraint).
-     * The  outb  %al, %dx  encoding is the only option for all other cases.
-     * %1 expands to %dx because  port  is a uint16_t.  %w1 could be used if we had the port number a wider C type */
-}
-
-void io_wait(int n)
-{
-	for (int i =0; i<n; i++)
-    	outb(0x80, 0);
-}
-
-uint8_t inb(uint16_t port)
-{
-    uint8_t ret;
-    asm volatile ( "inb %1, %0"
-                   : "=a"(ret)
-                   : "Nd"(port) );
-    return ret;
+void write_input_prefix(void) {
+	// à développer qd on aura un file system
+	printf("> ");
 }
 
 void clean (void){
@@ -54,10 +38,6 @@ bool match(char* li, char* fc, size_t fclength)
 	return (bonmatch);
 }
 
-void write_input_prefix(void) {
-	// à développer qd on aura un file system
-	printf("> ");
-}
 
 void switch_side(void)
 {
@@ -66,13 +46,6 @@ void switch_side(void)
 	}
 	else {terminal_setcolor(get_entry_color(11, 0));}
 	write_input_prefix();
-}
-
-void glitch(void)
-{
-	int j=6;
-	int z=j/0;
-	printf((char*) z);
 }
 
 void ff(void)
@@ -122,9 +95,9 @@ void parse(char* l)
 {	
 	if (!surrv){
 		if (match(l,"switch side",11)) {switch_side();}
-		else if (match(l,"glitch",6)) glitch();
 		else if (match(l,"help",4)) help();
 		else if (match(l,"ff",2)) ff();
+		else if (match(l,"reboot",6)) reboot();
 		else if (match(l,"  ",2)) write_input_prefix();
 		else if (match(l,"loldle",6)) {loldlencours=rand; pars=false; printf("Enter a champion's name : ");}
 		else {
@@ -207,6 +180,7 @@ void liclavier(int m, int* de, char* clav, bool pars) //on va autoriser l'ecritu
 void kernel_main(void) {
 	terminal_initialize();
 	clean();
+	//archinit();
 	cas=0;
 	rand=0;
 	loldlencours=161;
@@ -218,7 +192,7 @@ void kernel_main(void) {
 	int m;
 	char* clav= get_clavier();
 	printf("Welcome to the rift!\n");
-	write_input_prefix()
+	write_input_prefix();
 	while ( !cff ) {
 			inter=inb(0x060);
 			m=inter;
@@ -226,4 +200,3 @@ void kernel_main(void) {
 	}
 
 }
-
