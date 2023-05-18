@@ -36,14 +36,14 @@ char* get_perso( int rand, int stat){
 	perso[10][0]="Aurelion Sol";perso[10][1]="Male";perso[10][2]="Middle";perso[10][3]="Celestial";perso[10][4]="Mana";perso[10][5]="Ranged";perso[10][6]="Runeterra";perso[10][7]="2016";
 	perso[11][0]="Azir";perso[11][1]="Male";perso[11][2]="Middle";perso[11][3]="God-Warrior";perso[11][4]="Mana";perso[11][5]="Ranged";perso[11][6]="Shurima";perso[11][7]="2014";
 	perso[12][0]="Bard";perso[12][1]="Male";perso[12][2]="Support";perso[12][3]="Celestial";perso[12][4]="Mana";perso[12][5]="Ranged";perso[12][6]="Runeterra";perso[12][7]="2015";
-	perso[13][0]="Bel'Veth";perso[13][1]="Female";perso[13][2]="";perso[13][3]="Void-Being";perso[13][4]="Manaless";perso[13][5]="Melee";perso[13][6]="Void";perso[13][7]="se':";
+	perso[13][0]="Bel'Veth";perso[13][1]="Female";perso[13][2]="Jungle";perso[13][3]="Void-Being";perso[13][4]="Manaless";perso[13][5]="Melee";perso[13][6]="Void";perso[13][7]="2022";
 	perso[14][0]="Blitzcrank";perso[14][1]="Other";perso[14][2]="Support";perso[14][3]="Golem";perso[14][4]="Mana";perso[14][5]="Melee";perso[14][6]="Zaun";perso[14][7]="2009";
 	perso[15][0]="Brand";perso[15][1]="Male";perso[15][2]="Support";perso[15][3]="Human";perso[15][4]="Mana";perso[15][5]="Ranged";perso[15][6]="Runeterra";perso[15][7]="2011";
 	perso[16][0]="Braum";perso[16][1]="Male";perso[16][2]="Support";perso[16][3]="Human";perso[16][4]="Mana";perso[16][5]="Melee";perso[16][6]="Freljord";perso[16][7]="2014";
 	perso[17][0]="Caitlyn";perso[17][1]="Female";perso[17][2]="Bottom";perso[17][3]="Human";perso[17][4]="Mana";perso[17][5]="Ranged";perso[17][6]="Piltover";perso[17][7]="2011";
 	perso[18][0]="Camille";perso[18][1]="Female";perso[18][2]="Top";perso[18][3]="Human";perso[18][4]="Mana";perso[18][5]="Melee";perso[18][6]="Piltover";perso[18][7]="2016";
 	perso[19][0]="Cassiopeia";perso[19][1]="Female";perso[19][2]="Middle";perso[19][3]="Human";perso[19][4]="Mana";perso[19][5]="Ranged";perso[19][6]="Noxus";perso[19][7]="2010";
-	perso[20][0]="Cho'Gath";perso[20][1]="Other";perso[20][2]="";perso[20][3]="Void-Being";perso[20][4]="Mana";perso[20][5]="Melee";perso[20][6]="Void";perso[20][7]="se':";
+	perso[20][0]="Cho'Gath";perso[20][1]="Other";perso[20][2]="Top";perso[20][3]="Void-Being";perso[20][4]="Mana";perso[20][5]="Melee";perso[20][6]="Void";perso[20][7]="2009";
 	perso[21][0]="Corki";perso[21][1]="Male";perso[21][2]="Middle";perso[21][3]="Yordle";perso[21][4]="Mana";perso[21][5]="Ranged";perso[21][6]="Bandle City";perso[21][7]="2009";
 	perso[22][0]="Darius";perso[22][1]="Male";perso[22][2]="Top";perso[22][3]="Human";perso[22][4]="Mana";perso[22][5]="Melee";perso[22][6]="Noxus";perso[22][7]="2012";
 	perso[23][0]="Diana";perso[23][1]="Female";perso[23][2]="Jungle";perso[23][3]="Aspect";perso[23][4]="Mana";perso[23][5]="Melee";perso[23][6]="Targon";perso[23][7]="2012";
@@ -74,7 +74,7 @@ char* get_perso( int rand, int stat){
 	perso[48][0]="Jayce";perso[48][1]="Male";perso[48][2]="Top";perso[48][3]="pecies";perso[48][4]="Mana";perso[48][5]="Melee";perso[48][6]="Piltover";perso[48][7]="2012";
 	perso[49][0]="Jhin";perso[49][1]="Male";perso[49][2]="Bottom";perso[49][3]="Human";perso[49][4]="Mana";perso[49][5]="Ranged";perso[49][6]="Ionia";perso[49][7]="2016";
 	perso[50][0]="Jinx";perso[50][1]="Female";perso[50][2]="Bottom";perso[50][3]="Human";perso[50][4]="Mana";perso[50][5]="Ranged";perso[50][6]="Zaun";perso[50][7]="2013";
-	perso[51][0]="Kai'Sa";perso[51][1]="Female";perso[51][2]=" [";perso[51][3]="Human";perso[51][4]="Mana";perso[51][5]="Ranged";perso[51][6]="Void";perso[51][7]="': 2";
+	perso[51][0]="Kai'Sa";perso[51][1]="Female";perso[51][2]="Bottom";perso[51][3]="Human";perso[51][4]="Mana";perso[51][5]="Ranged";perso[51][6]="Void";perso[51][7]="2018";
 	perso[52][0]="Kalista";perso[52][1]="Female";perso[52][2]="Bottom";perso[52][3]="Wraith";perso[52][4]="Mana";perso[52][5]="Ranged";perso[52][6]="Shadow Isles";perso[52][7]="2014";
 	perso[53][0]="Karma";perso[53][1]="Female";perso[53][2]="Support";perso[53][3]="Human";perso[53][4]="Mana";perso[53][5]="Ranged";perso[53][6]="Ionia";perso[53][7]="2011";
 	perso[54][0]="Karthus";perso[54][1]="Male";perso[54][2]="Jungle";perso[54][3]="Wraith";perso[54][4]="Mana";perso[54][5]="Ranged";perso[54][6]="Shadow Isles";perso[54][7]="2009";
@@ -120,7 +120,7 @@ char* get_perso( int rand, int stat){
 	perso[94][0]="Quinn";perso[94][1]="Female";perso[94][2]="Top";perso[94][3]="Human";perso[94][4]="Mana";perso[94][5]="Ranged";perso[94][6]="Demacia";perso[94][7]="2013";
 	perso[95][0]="Rakan";perso[95][1]="Male";perso[95][2]="Support";perso[95][3]="Vastayan";perso[95][4]="Mana";perso[95][5]="Ranged";perso[95][6]="Ionia";perso[95][7]="2017";
 	perso[96][0]="Rammus";perso[96][1]="Male";perso[96][2]="Jungle";perso[96][3]="God-Warrior";perso[96][4]="Mana";perso[96][5]="Melee";perso[96][6]="Shurima";perso[96][7]="2009";
-	perso[97][0]="Rek'Sai";perso[97][1]="Female";perso[97][2]=": [";perso[97][3]="Void-Being";perso[97][4]="Rage";perso[97][5]="Melee";perso[97][6]="Void";perso[97][7]="e': ";
+	perso[97][0]="Rek'Sai";perso[97][1]="Female";perso[97][2]="Jungle";perso[97][3]="Void-Being";perso[97][4]="Rage";perso[97][5]="Melee";perso[97][6]="Void";perso[97][7]="2014";
 	perso[98][0]="Rell";perso[98][1]="Female";perso[98][2]="Support";perso[98][3]="Human";perso[98][4]="Mana";perso[98][5]="Melee";perso[98][6]="Noxus";perso[98][7]="2020";
 	perso[99][0]="Renata Glasc";perso[99][1]="Female";perso[99][2]="Support";perso[99][3]="Human";perso[99][4]="Mana";perso[99][5]="Ranged";perso[99][6]="Zaun";perso[99][7]="2022";
 	perso[100][0]="Renekton";perso[100][1]="Male";perso[100][2]="Top";perso[100][3]="God-Warrior";perso[100][4]="Fury";perso[100][5]="Melee";perso[100][6]="Shurima";perso[100][7]="2011";
