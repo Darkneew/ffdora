@@ -14,25 +14,7 @@ struct idtdesc kidt[IDTSIZE]; 		/* IDT table */
 struct idtr kidtr; 				/* IDTR registry */		
 uint32_t* stack_ptr=0;
 
-void save_regs() {
-	asm ("pushal \n \
-	push %ds \n \
-	push %es \n \
-	push %fs \n \
-	push %gs \n \
-	push %ebx \n \
-	mov $0x10, %bx \n \
-	mov %bx, %ds \n \
-	pop %ebx \n");
-}
-
-void restore_regs () {
-	asm ("pop %gs \n \
-	pop %fs \n \
-	pop %es \n \
-	pop %ds \n \
-	popal \n");
-}
+extern void init_segments();
 
 void schedule(){ 
 	// todo
@@ -161,61 +143,12 @@ void isr_default_int(int id)
 	outb(0xA0,0x20);
 }
 
-void _asm_int_1() {
-	save_regs();
-	isr_default_int(1);
-	asm("pop %eax \n \
-	mov $0x20, %al \n \
-	out %al, $0x20 \n");
-	restore_regs();
-	asm("iret");
-}
-
-void _asm_int_0() {
-	save_regs();
-	isr_default_int(0);
-	asm("pop %eax \n \
-	mov $0x20, %al \n \
-	out %al, $0x20 \n");
-	restore_regs();
-	asm("iret");
-}
-
-void _asm_syscalls() {
-	save_regs();
-	int num;
-	asm("mov %%eax, %0": "=m"(num):);
-	do_syscalls(num);
-	asm("cli \n \
-	sti \n");
-	restore_regs();
-	asm("iret");
-}
-
-void _asm_exc_GP() {
-	save_regs();
-	isr_GP_exc();
-	restore_regs();
-	asm("add 4, %esp \n \
-	iret\n");
-}
-
-void _asm_exc_PF() {
-	save_regs();
-	isr_PF_exc();
-	restore_regs();
-	asm("add 4, %esp \n \
-	iret\n");
-}
-
-void _asm_schedule() {
-	save_regs();
-	isr_schedule_int();
-	asm("mov $0x20, %al \n \
-	out %al, $0x20 \n");
-	restore_regs();
-	asm("iret");
-}
+extern void _asm_int_1();
+extern void _asm_int_0();
+extern void _asm_syscalls();
+extern void _asm_exc_GP();
+extern void _asm_exc_PF();
+extern void _asm_schedule();
 
 void init_gdt_desc(uint32_t base, uint32_t limite, uint8_t acces, uint8_t other, struct gdtdesc *desc)
 {
@@ -259,15 +192,7 @@ void init_gdt(void)
     asm ("lgdtl (kgdtr)");
 
     /* initiliaz the segments */
-    asm ("movw $0x10, %ax \n \
-			movw %ax, %ds \n \
-            movw %ax, %es    \n \
-            movw %ax, %fs    \n \
-            movw %ax, %gs    \n \
-            movw %ax, %ss    \n \
-    		ljmp $0x08, $next \n \
-            next: \n \  
-			ret\n");
+    //init_segments();
 }
 
 void init_idt_desc(uint16_t select, uint32_t offset, uint16_t type, struct idtdesc *desc)

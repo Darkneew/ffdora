@@ -180,7 +180,7 @@ void liclavier(int m, int* de, char* clav, bool pars) //on va autoriser l'ecritu
 void kernel_main(void) {
 	terminal_initialize();
 	clean();
-	//archinit();
+	archinit();
 	cas=0;
 	rand=0;
 	loldlencours=161;

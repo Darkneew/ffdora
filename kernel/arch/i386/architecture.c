@@ -3,15 +3,13 @@
 #include <kernel/io.h>
 #include <kernel/x86.h>
 
+extern void end_init_arch();
 
 void archinit(void) {
     init_gdt();
-	asm("	movw $0x18, %%ax \n \
-    		movw %%ax, %%ss \n \
-			movl %0, %%esp"::"i" (KERN_STACK));
-    init_idt();
-    init_pic();
-    asm("	movw $0x38, %ax; ltr %ax");	 
+    //init_idt();
+    //init_pic();
+    //end_init_arch();
 }
 
 void reboot(void) {

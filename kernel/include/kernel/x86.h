@@ -12,8 +12,6 @@
 #define INTGATE  0x8E00		/* utilise pour gerer les interruptions */
 #define TRAPGATE 0xEF00		/* utilise pour faire des appels systemes */
 
-#define	KERN_STACK			0x0009FFF0
-
 struct gdtr {
     uint16_t limite;
     uint32_t base;
