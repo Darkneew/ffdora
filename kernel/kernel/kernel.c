@@ -12,6 +12,7 @@ int actu;
 int cas;//ctrl alt shift
 int loldlencours;
 int rand;
+bool scot;
 
 void outb(uint16_t port, uint8_t val)
 {
@@ -88,6 +89,7 @@ void help(void)
 	printf("glitch - A glitch causing rift to reset \n");
 	printf("ff - Start a surrender vote \n");
 	printf("loldle - Play loldle a game where you must find a random champ\n");
+	printf("scoot - Enter text edit mode \n");
 	printf("help - Print this \n");
 	write_input_prefix();
 	pars=true;
@@ -120,13 +122,14 @@ void loldle(char* guess){
 
 void parse(char* l)
 {	
-	if (!surrv){
+	if (!surrv && !scot){
 		if (match(l,"switch side",11)) {switch_side();}
 		else if (match(l,"glitch",6)) glitch();
 		else if (match(l,"help",4)) help();
 		else if (match(l,"ff",2)) ff();
 		else if (match(l,"  ",2)) write_input_prefix();
-		else if (match(l,"loldle",6)) {loldlencours=rand; pars=false; printf("Enter a champion's name : ");}
+		else if (match(l,"loldle",6)) {loldlencours=rand; pars=false;printf("Enter a champion's name : ");}
+		else if (match(l,"scoot",5)) {scot=true;}
 		else {
 			pars=false;
 			printf("Unknown spell, try again \n");
@@ -134,16 +137,17 @@ void parse(char* l)
 			pars=true;
 		}
 	}
-	else {
+	else if (surrv){
 		if (match(l,"y",1)){printf("You surrendered"); cff=true;}
 		else{pars=false; printf("You refuse to surrender \n"); write_input_prefix(); pars=true; surrv=false;}
 	}
+	else if (scot){if (match(l,"quit",4)) {scot=false; write_input_prefix();}}
 }
 
 
 void liclavier(int m, int* de, char* clav, bool pars) //on va autoriser l'ecriture seulement si la touche à été relevée
 {
-	if (m<59 && de[m]==0) {
+	if (m<80 && de[m]==0) {
 		switch (m) {
 		case 4:
 			if (cas==0){
@@ -157,10 +161,17 @@ void liclavier(int m, int* de, char* clav, bool pars) //on va autoriser l'ecritu
 				actu+=1;
 				break;
 		case 14:
-			if (actu>0){
-			terminal_delete();
-			actu+=-1;
-			currentlign[actu]=' ';}
+			if (!scot){
+				if (actu>0){
+				terminal_delete(scot);
+				actu+=-1;
+				currentlign[actu]=' ';}
+			}
+			else {
+				terminal_delete(scot);
+				if (actu>0){actu += -1;currentlign[actu]=' ';}
+				else{actu=get_terminal_column();}
+				}
 			break;
 		case 15:
 			printf("   ");
@@ -180,6 +191,12 @@ void liclavier(int m, int* de, char* clav, bool pars) //on va autoriser l'ecritu
 			break;
 		case 54:
 			cas=(cas/10)*10+1;
+			break;
+		case 75:
+			if (actu>0){actu+=-1;set_terminal_column(get_terminal_column()-1);}
+			break;
+		case 77:
+			{actu+=1;set_terminal_column(get_terminal_column()+1);}
 			break;
 		default:
 			if (cas==0){
@@ -213,7 +230,8 @@ void kernel_main(void) {
 	pars=true;
 	cff=false;
 	surrv=false;
-	int de[60];
+	scot=false;
+	int de[80];
 	uint8_t inter;
 	int m;
 	char* clav= get_clavier();
