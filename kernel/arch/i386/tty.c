@@ -18,7 +18,7 @@ static uint16_t* terminal_buffer;
 
 
 char* get_clavier(void) {
-	return("&&&&&'(-&_&&)=&&azertyuiop^$&&qsdfghjklm&&&*wxcvbn,;:!&*& &&1234567890&+&&AZERTYUIOP&&&&QSDFGHJKLM%&&&WXCVBN?./&&*& &");
+	return("&&&&&'(-&_&&)=&&azertyuiop^$&&qsdfghjklm&&&*wxcvbn,;:!&*& &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&1234567890&+&&AZERTYUIOP&&&&QSDFGHJKLM%&&&WXCVBN?./&&*& &");
 }
 
 char* get_perso( int rand, int stat){
