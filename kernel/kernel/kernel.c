@@ -204,7 +204,7 @@ void liclavier(int m, int* de, char* clav, bool pars) //on va autoriser l'ecritu
 				terminal_putchar(c);
 				currentlign[actu]=c;}
 			else {
-				char c=clav[m+58]; 
+				char c=clav[m+88]; 
 				terminal_putchar(c);
 				currentlign[actu]=c;
 			}
