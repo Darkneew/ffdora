@@ -7,7 +7,7 @@
 
 void terminal_initialize(void);
 void terminal_reset(void);
-void terminal_delete(void);
+void terminal_delete(bool scot);
 void terminal_setcolor(uint8_t);
 void terminal_putchar(char c);
 void terminal_write(const char* data, size_t size);
