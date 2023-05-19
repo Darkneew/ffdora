@@ -2,25 +2,26 @@
 #include <stdbool.h>
 #include <string.h>
 #include <stdint.h>
+#include <cmd.h>
+#include <filesystem.h>
 #include <kernel/tty.h>
 #include <kernel/architecture.h>
 #include <kernel/io.h>
 
+enum kernelstate {
+	INPUT,
+	LOLDLE,
+	FF,
+	SURRENDER_VOTE
+};
 
+enum kernelstate kstate = INPUT;
 char* currentlign;
-bool surrv;
-bool cff;
-bool pars;
 int actu;
 int cas;//ctrl alt shift
-int loldlencours;
 int rand;
 bool scot;
 
-void write_input_prefix(void) {
-	// à développer qd on aura un file system
-	printf("> ");
-}
 
 void clean (void){
 	for (size_t x = 0; x < get_width(); x++) {
@@ -28,17 +29,6 @@ void clean (void){
 		}
 	actu=0;
 }
-
-bool match(char* li, char* fc, size_t fclength)
-{
-	bool bonmatch=true;
-	for (size_t x=0; x<get_width(); x++)
-	{
-		if ((li[x]!=fc[x] && x<fclength)||(li[x]!=' ' && x>=fclength)){bonmatch=false;}
-	}
-	return (bonmatch);
-}
-
 
 void switch_side(void)
 {
@@ -51,74 +41,52 @@ void switch_side(void)
 
 void ff(void)
 {
-	surrv=true;
+	kstate = SURRENDER_VOTE;
 	printf("surrender vote : [y/n]? ");
 }
 
 void help(void)
 {
-	pars=false;
 	printf("switch side - Change side color \n");
-	printf("glitch - A glitch causing rift to reset \n");
+	printf("reboot - To enter a new lobby \n");
 	printf("ff - Start a surrender vote \n");
 	printf("loldle - Play loldle a game where you must find a random champ\n");
 	printf("scoot - Enter text edit mode \n");
 	printf("help - Print this \n");
 	write_input_prefix();
-	pars=true;
 }
-
-void loldle(char* guess){
-	bool pastrouv=true;
-	for (int i=0; i<161; i++){ //a dichotomiser pour opti
-		if (match(guess,get_perso(i,0),strlen(get_perso(i,0))))
-		{
-			pastrouv=false;
-			uint8_t col=get_terminal_color();
-			for (int j=1; j<8;j++){
-				if (get_perso(i,j)==get_perso(loldlencours,j)){
-					terminal_setcolor(get_entry_color(10,0));
-				}
-				else {terminal_setcolor(get_entry_color(4,0));}
-				printf(get_perso(i,j));
-				printf(" ");
-			}
-			terminal_setcolor(col);
-			printf("\n");
-			if (i==loldlencours){printf("Congrats \n");loldlencours=161;pars=true;write_input_prefix();}
-			else {printf("Enter a champion's name : ");}
-		}
-	}
-	if (pastrouv){printf("Unknown champion, try again \n");printf("Enter a champion's name : ");}
-}
-
 
 void parse(char* l)
 {	
-	if (!surrv && !scot){
+	if (!scot){
 		if (match(l,"switch side",11)) {switch_side();}
 		else if (match(l,"help",4)) help();
 		else if (match(l,"ff",2)) ff();
 		else if (match(l,"reboot",6)) reboot();
 		else if (match(l,"  ",2)) write_input_prefix();
-		else if (match(l,"loldle",6)) {loldlencours=rand; pars=false;printf("Enter a champion's name : ");}
+		else if (match(l,"loldle",6)) {init_loldle(rand); kstate = LOLDLE; }
 		else if (match(l,"scoot",5)) {scot=true;}
 		else {
-			pars=false;
 			printf("Unknown spell, try again \n");
 			write_input_prefix();
-			pars=true;
 		}
-	}
-	else if (surrv){
-		if (match(l,"y",1)){printf("You surrendered"); cff=true;}
-		else{pars=false; printf("You refuse to surrender \n"); write_input_prefix(); pars=true; surrv=false;}
 	}
 	else if (scot){if (match(l,"quit",4)) {scot=false; write_input_prefix();}}
 }
 
+void surrender_vote(char* l) {
+	if (match(l,"y",1)) {
+		printf("You surrendered"); 
+		kstate = FF;
+	} else {
+		kstate = INPUT; 
+		printf("You refuse to surrender \n"); 
+		write_input_prefix();
+	}
+}
 
-void liclavier(int m, int* de, char* clav, bool pars) //on va autoriser l'ecriture seulement si la touche à été relevée
+
+void liclavier(int m, int* de, char* clav) //on va autoriser l'ecriture seulement si la touche à été relevée
 {
 	if (m<80 && de[m]==0) {
 		switch (m) {
@@ -155,8 +123,9 @@ void liclavier(int m, int* de, char* clav, bool pars) //on va autoriser l'ecritu
 			break;
 		case 28:
 			terminal_putchar('\n');
-			if (pars) {parse(currentlign);}
-			else if (loldlencours!=161) {loldle(currentlign);}
+			if (kstate == INPUT) parse(currentlign);
+			else if (kstate == LOLDLE) {if (loldle(currentlign)) kstate = INPUT;}
+			else if (kstate == SURRENDER_VOTE) {surrender_vote(currentlign);}
 			clean();
 			break;
 		case 42:
@@ -191,7 +160,7 @@ void liclavier(int m, int* de, char* clav, bool pars) //on va autoriser l'ecritu
 			if (m==170 || m==182){cas=(cas/10)*10;}
 			de[m-128]=0;}
 	}
-	rand=(rand+1)%161;
+	rand=(rand+1)%9887;
 }
 
 void kernel_main(void) {
@@ -200,10 +169,6 @@ void kernel_main(void) {
 	archinit();
 	cas=0;
 	rand=0;
-	loldlencours=161;
-	pars=true;
-	cff=false;
-	surrv=false;
 	scot=false;
 	int de[80];
 	uint8_t inter;
@@ -211,10 +176,10 @@ void kernel_main(void) {
 	char* clav= get_clavier();
 	printf("Welcome to the rift!\n");
 	write_input_prefix();
-	while ( !cff ) {
+	while (kstate != FF) {
 			inter=inb(0x060);
 			m=inter;
-			liclavier(m,de,clav,pars);
+			liclavier(m,de,clav);
 	}
 
 }

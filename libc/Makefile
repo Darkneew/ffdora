@@ -37,7 +37,10 @@ string/memcmp.o \
 string/memcpy.o \
 string/memmove.o \
 string/memset.o \
+string/match.o \
 string/strlen.o \
+cmd/loldle.o \
+filesystem/write_input_prefix.o \
 
 HOSTEDOBJS=\
 $(ARCH_HOSTEDOBJS) \
