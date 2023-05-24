@@ -2,14 +2,10 @@
 #include <stddef.h>
 #include <stdint.h>
 #include <string.h>
- 
+#include <kernel/cursor.h>
 #include <kernel/tty.h>
  
 #include "vga.h"
- 
-static const size_t VGA_WIDTH = 80;
-static const size_t VGA_HEIGHT = 25;
-static uint16_t* const VGA_MEMORY = (uint16_t*) 0xB8000;
  
 static size_t terminal_row;
 static size_t terminal_column;
@@ -28,6 +24,7 @@ void terminal_reset(void)
 		terminal_buffer[(VGA_HEIGHT-1)*VGA_WIDTH + x] = vga_entry(' ', terminal_color);
 	}
 	terminal_row += -1;
+	update_cursor();
 }
 
 char* get_clavier(void) {
@@ -46,6 +43,7 @@ void terminal_initialize(void)
 			terminal_buffer[index] = vga_entry(' ', terminal_color);
 		}
 	}
+	update_cursor();
 }
 
 void terminal_delete(bool scot)
@@ -67,6 +65,7 @@ void terminal_delete(bool scot)
 				terminal_column=x+1;
 			}}
 	}
+	update_cursor();
 }
  
 void terminal_putentryat(char c, uint8_t color, size_t x, size_t y) 
@@ -89,6 +88,7 @@ void terminal_putchar(char c)
 			terminal_column = 0;
 		}
 	}
+	update_cursor();
 }
  
 void terminal_write(const char* data, size_t size) 
@@ -107,6 +107,7 @@ size_t get_terminal_row(void){
 }
 void set_terminal_row(size_t r){
 	terminal_row=r;
+	update_cursor();
 }
 
 size_t get_terminal_column(void){
@@ -114,6 +115,7 @@ size_t get_terminal_column(void){
 }
 void set_terminal_column(size_t r){
 	terminal_column=r;
+	update_cursor();
 }
 
 void set_terminal_buffer(size_t index, uint16_t col){

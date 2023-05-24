@@ -95,3 +95,12 @@ _asm_schedule:
 	out %al, $0x20
 	RESTORE_REGS
 	iret
+
+.extern kgdtr, kidtr
+.global _load_gdt, _load_idt
+
+_load_gdt:
+    lgdtl (kgdtr)
+
+_load_idt:
+    lidtl (kidtr)

@@ -22,7 +22,5 @@ size_t get_height(void);
 size_t get_width(void);
 uint8_t get_terminal_color(void);
 uint8_t get_entry_color(size_t fc,size_t  bc);
-size_t get_terminal_delta(void);
-void set_terminal_delta(size_t d);
 
 #endif

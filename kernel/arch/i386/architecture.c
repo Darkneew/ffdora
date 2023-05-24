@@ -7,8 +7,8 @@ extern void end_init_arch();
 
 void archinit(void) {
     init_gdt();
-    //init_idt();
-    //init_pic();
+    init_idt();
+    init_pic();
     //end_init_arch();
 }
 

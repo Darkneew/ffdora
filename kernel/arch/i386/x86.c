@@ -149,6 +149,8 @@ extern void _asm_syscalls();
 extern void _asm_exc_GP();
 extern void _asm_exc_PF();
 extern void _asm_schedule();
+extern void _load_gdt();
+extern void _load_idt();
 
 void init_gdt_desc(uint32_t base, uint32_t limite, uint8_t acces, uint8_t other, struct gdtdesc *desc)
 {
@@ -189,7 +191,7 @@ void init_gdt(void)
     memcpy((char *) kgdtr.base, (char *) kgdt, kgdtr.limite);
 
     /* load the gdtr registry */
-    asm ("lgdtl (kgdtr)");
+    _load_gdt();
 
     /* initiliaz the segments */
     //init_segments();
@@ -203,7 +205,6 @@ void init_idt_desc(uint16_t select, uint32_t offset, uint16_t type, struct idtde
 	desc->offset16_31 = (offset & 0xffff0000) >> 16;
 	return;
 }
-
 
 void init_idt(void)
 {
@@ -230,7 +231,7 @@ void init_idt(void)
 	memcpy((char *) kidtr.base, (char *) kidt, kidtr.limite);
 
 	/* Load the IDTR registry */
-	asm("lidtl (kidtr)");
+	_load_idt();
 }
 
 

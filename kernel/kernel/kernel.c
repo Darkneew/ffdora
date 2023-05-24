@@ -7,6 +7,7 @@
 #include <kernel/tty.h>
 #include <kernel/architecture.h>
 #include <kernel/io.h>
+#include <kernel/cursor.h>
 
 enum kernelstate {
 	INPUT,
@@ -29,10 +30,9 @@ void clean (void){
 	actu=0;
 }
 
-
 void parse(char* l)
 {	
-	if (match(l,"switch side",11)) {switch_side();}
+	if (match(l,"switch side",11)) {switchside();}
 	else if (match(l,"help",4)) help();
 	else if (match(l,"ff",2)) {ff(); kstate = SURRENDER_VOTE;}
 	else if (match(l,"reboot",6)) reboot();
@@ -132,6 +132,7 @@ void liclavier(int m, int* de, char* clav) //on va autoriser l'ecriture seulemen
 }
 
 void kernel_main(void) {
+	disable_cursor();
 	terminal_initialize();
 	clean();
 	archinit();
@@ -144,6 +145,7 @@ void kernel_main(void) {
 	char* clav= get_clavier();
 	printf("Welcome to the rift!\n");
 	write_input_prefix();
+	enable_cursor();
 	while (kstate != FF) {
 			inter=inb(0x060);
 			m=inter;
