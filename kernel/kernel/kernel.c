@@ -12,16 +12,15 @@ enum kernelstate {
 	INPUT,
 	LOLDLE,
 	FF,
-	SURRENDER_VOTE
+	SURRENDER_VOTE,
+	SCOOT
 };
 
-enum kernelstate kstate = INPUT;
+enum kernelstate kstate;
 char* currentlign;
 int actu;
 int cas;//ctrl alt shift
 int rand;
-bool scot;
-
 
 void clean (void){
 	for (size_t x = 0; x < get_width(); x++) {
@@ -30,57 +29,25 @@ void clean (void){
 	actu=0;
 }
 
-void switch_side(void)
-{
-	if (get_terminal_color() == get_entry_color(11, 0)){
-		terminal_setcolor(get_entry_color(12, 0));
-	}
-	else {terminal_setcolor(get_entry_color(11, 0));}
-	write_input_prefix();
-}
-
-void ff(void)
-{
-	kstate = SURRENDER_VOTE;
-	printf("surrender vote : [y/n]? ");
-}
-
-void help(void)
-{
-	printf("switch side - Change side color \n");
-	printf("reboot - To enter a new lobby \n");
-	printf("ff - Start a surrender vote \n");
-	printf("loldle - Play loldle a game where you must find a random champ\n");
-	printf("scoot - Enter text edit mode \n");
-	printf("help - Print this \n");
-	write_input_prefix();
-}
 
 void parse(char* l)
 {	
-	if (!scot){
-		if (match(l,"switch side",11)) {switch_side();}
-		else if (match(l,"help",4)) help();
-		else if (match(l,"ff",2)) ff();
-		else if (match(l,"reboot",6)) reboot();
-		else if (match(l,"  ",2)) write_input_prefix();
-		else if (match(l,"loldle",6)) {init_loldle(rand); kstate = LOLDLE; }
-		else if (match(l,"scoot",5)) {scot=true;}
-		else {
-			printf("Unknown spell, try again \n");
-			write_input_prefix();
-		}
+	if (match(l,"switch side",11)) {switch_side();}
+	else if (match(l,"help",4)) help();
+	else if (match(l,"ff",2)) {ff(); kstate = SURRENDER_VOTE;}
+	else if (match(l,"reboot",6)) reboot();
+	else if (match(l,"loldle",6)) {init_loldle(rand); kstate = LOLDLE; }
+	else if (match(l,"scoot",5)) {kstate = SCOOT;}
+	else if (match(l,"  ",2)) write_input_prefix();
+	else {
+		printf("Unknown spell, try again \n");
+		write_input_prefix();
 	}
-	else if (scot){if (match(l,"quit",4)) {scot=false; write_input_prefix();}}
 }
 
-void surrender_vote(char* l) {
-	if (match(l,"y",1)) {
-		printf("You surrendered"); 
-		kstate = FF;
-	} else {
-		kstate = INPUT; 
-		printf("You refuse to surrender \n"); 
+void scoot(char* l) {
+	if (match(l,"quit",4)) {
+		kstate = INPUT;
 		write_input_prefix();
 	}
 }
@@ -102,14 +69,14 @@ void liclavier(int m, int* de, char* clav) //on va autoriser l'ecriture seulemen
 				actu+=1;
 				break;
 		case 14:
-			if (!scot){
+			if (kstate != SCOOT){
 				if (actu>0){
-				terminal_delete(scot);
+				terminal_delete(false);
 				actu+=-1;
 				currentlign[actu]=' ';}
 			}
 			else {
-				terminal_delete(scot);
+				terminal_delete(true);
 				if (actu>0){actu += -1;currentlign[actu]=' ';}
 				else{actu=get_terminal_column();}
 				}
@@ -124,8 +91,9 @@ void liclavier(int m, int* de, char* clav) //on va autoriser l'ecriture seulemen
 		case 28:
 			terminal_putchar('\n');
 			if (kstate == INPUT) parse(currentlign);
+			else if (kstate == SCOOT) scoot(currentlign);
 			else if (kstate == LOLDLE) {if (loldle(currentlign)) kstate = INPUT;}
-			else if (kstate == SURRENDER_VOTE) {surrender_vote(currentlign);}
+			else if (kstate == SURRENDER_VOTE) {if (surrender_vote(currentlign)) {kstate = FF;} else {kstate = INPUT;}}
 			clean();
 			break;
 		case 42:
@@ -167,9 +135,9 @@ void kernel_main(void) {
 	terminal_initialize();
 	clean();
 	archinit();
+	kstate = INPUT;
 	cas=0;
 	rand=0;
-	scot=false;
 	int de[80];
 	uint8_t inter;
 	int m;

@@ -40,6 +40,9 @@ string/memset.o \
 string/match.o \
 string/strlen.o \
 cmd/loldle.o \
+cmd/switchside.o \
+cmd/ff.o \
+cmd/help.o \
 filesystem/write_input_prefix.o \
 
 HOSTEDOBJS=\
