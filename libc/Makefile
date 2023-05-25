@@ -43,6 +43,7 @@ cmd/loldle.o \
 cmd/switchside.o \
 cmd/ff.o \
 cmd/help.o \
+cmd/art.o \
 filesystem/write_input_prefix.o \
 
 HOSTEDOBJS=\

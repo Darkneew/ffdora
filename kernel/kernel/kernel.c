@@ -20,6 +20,7 @@ enum kernelstate {
 enum kernelstate kstate;
 char* currentlign;
 int actu;
+int maxcol;
 int cas;//ctrl alt shift
 int rand;
 
@@ -28,6 +29,7 @@ void clean (void){
 			currentlign[x] = ' ';
 		}
 	actu=0;
+	maxcol=0;
 }
 
 void parse(char* l)
@@ -37,7 +39,8 @@ void parse(char* l)
 	else if (match(l,"ff",2)) {ff(); kstate = SURRENDER_VOTE;}
 	else if (match(l,"reboot",6)) reboot();
 	else if (match(l,"loldle",6)) {init_loldle(rand); kstate = LOLDLE; }
-	else if (match(l,"scoot",5)) {kstate = SCOOT;}
+	else if (match(l,"scoot",5)) {kstate = SCOOT;terminal_initialize();}
+	else if (match(l,"art",3)) {art(rand%4); write_input_prefix();}
 	else if (match(l,"  ",2)) write_input_prefix();
 	else {
 		printf("Unknown spell, try again \n");
@@ -48,6 +51,7 @@ void parse(char* l)
 void scoot(char* l) {
 	if (match(l,"quit",4)) {
 		kstate = INPUT;
+		terminal_initialize();
 		write_input_prefix();
 	}
 }
@@ -72,13 +76,17 @@ void liclavier(int m, int* de, char* clav) //on va autoriser l'ecriture seulemen
 			if (kstate != SCOOT){
 				if (actu>0){
 				terminal_delete(false);
+				if (actu==maxcol){maxcol+=-1;}
 				actu+=-1;
 				currentlign[actu]=' ';}
 			}
 			else {
 				terminal_delete(true);
-				if (actu>0){actu += -1;currentlign[actu]=' ';}
-				else{actu=get_terminal_column();}
+				if (actu>0){
+					if (actu==maxcol){maxcol+=-1;}
+					actu += -1;
+					currentlign[actu]=' ';}
+				else{actu=get_terminal_column(); maxcol=get_terminal_column();}
 				}
 			break;
 		case 15:
@@ -106,7 +114,7 @@ void liclavier(int m, int* de, char* clav) //on va autoriser l'ecriture seulemen
 			if (actu>0){actu+=-1;set_terminal_column(get_terminal_column()-1);}
 			break;
 		case 77:
-			{actu+=1;set_terminal_column(get_terminal_column()+1);}
+			if (actu<maxcol){actu+=1;set_terminal_column(get_terminal_column()+1);}
 			break;
 		default:
 			if (cas==0){
@@ -129,6 +137,7 @@ void liclavier(int m, int* de, char* clav) //on va autoriser l'ecriture seulemen
 			de[m-128]=0;}
 	}
 	rand=(rand+1)%9887;
+	if (actu > maxcol){maxcol=actu;}
 }
 
 void kernel_main(void) {
@@ -139,6 +148,7 @@ void kernel_main(void) {
 	kstate = INPUT;
 	cas=0;
 	rand=0;
+	maxcol=0;
 	int de[80];
 	uint8_t inter;
 	int m;

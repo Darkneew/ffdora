@@ -9,5 +9,5 @@ void switchside (void);
 void help (void);
 void ff (void);
 bool surrender_vote(char* l);
-
+void art(int rand);
 #endif

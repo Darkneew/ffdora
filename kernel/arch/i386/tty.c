@@ -86,6 +86,7 @@ void terminal_putchar(char c)
 		terminal_putentryat(c, terminal_color, terminal_column, terminal_row);
 		if (++terminal_column == VGA_WIDTH) {
 			terminal_column = 0;
+			terminal_column +=1; //cela cause pas mal d'erreur de parsage par exemple et la suppression ne permet pas de remonter saud en mode ecriture de texte mais normalement ce cas n'arrive pas en dehors de l'édition de texte pour l'instant.
 		}
 	}
 	update_cursor();
