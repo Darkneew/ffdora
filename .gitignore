@@ -3,5 +3,3 @@ isodir
 sysroot
 .vscode
 preset
-*.sh
-makefile

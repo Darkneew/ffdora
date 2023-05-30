@@ -5,7 +5,7 @@
 
 bool surrender_vote(char* l) {
 	if (match(l,"y",1)) {
-		printf("You surrendered"); 
+		printf("You surrendered: DEFEAT"); 
 		return true;
 	} else {
 		printf("You refuse to surrender \n"); 
